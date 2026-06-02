@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -23,11 +23,18 @@ import {
   Bike
 } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [openMenus, setOpenMenus] = useState(['store', 'growth']);
   const isActive = (path) => location.pathname === path;
+
+  // Close sidebar on mobile when route changes
+  useEffect(() => {
+    if (window.innerWidth < 1024) {
+      onClose?.();
+    }
+  }, [location.pathname]);
 
   const toggleMenu = (menu) => {
     setOpenMenus(prev => prev.includes(menu) ? [] : [menu]);
@@ -97,71 +104,84 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="w-80 bg-dark-deep min-h-screen flex flex-col border-r border-white/5 z-50 relative">
-      {/* Brand Logo */}
-      <div className="p-10 flex flex-col">
-        <div className="flex items-center space-x-3 mb-2">
-          <Zap size={32} className="text-brand-light fill-brand-light" />
-          <h1 className="text-3xl font-black tracking-tighter text-white">AZN <span className="text-slate-500 font-medium text-lg">Admin</span></h1>
+    <>
+      {/* Mobile Backdrop Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+      
+      <aside className={`fixed inset-y-0 left-0 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0 w-80 bg-dark-deep min-h-screen flex flex-col border-r border-white/5 z-50 transition-transform duration-300 ease-in-out`}>
+        {/* Brand Logo */}
+        <div className="p-10 flex flex-col">
+          <div className="flex items-center space-x-3 mb-2">
+            <Zap size={32} className="text-brand-light fill-brand-light" />
+            <h1 className="text-3xl font-black tracking-tighter text-white">AZN <span className="text-slate-500 font-medium text-lg">Admin</span></h1>
+          </div>
+          <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] ml-1">Neuro-Operations Matrix</p>
         </div>
-        <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.3em] ml-1">Neuro-Operations Matrix</p>
-      </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-4 overflow-y-auto custom-scrollbar pt-6 pb-20">
-        <div className="px-2 mb-8">
-          <NavItem to="/" icon={LayoutDashboard} label="Neural Dashboard" />
+        {/* Navigation */}
+        <nav className="flex-1 px-4 overflow-y-auto custom-scrollbar pt-6 pb-20">
+          <div className="px-2 mb-8">
+            <NavItem to="/" icon={LayoutDashboard} label="Neural Dashboard" />
+          </div>
+
+          <MenuGroup label="Store Logistics" id="store">
+            <NavItem to="/orders" icon={ShoppingBag} label="Order Management" badge="LIVE" />
+            <NavItem to="/riders" icon={Bike} label="Fleet Logistics" />
+            <NavItem to="/menu" icon={Edit3} label="Menu Editor" />
+            <NavItem to="/categories" icon={Layers} label="Taxonomy" />
+          </MenuGroup>
+
+          <MenuGroup label="Neural Marketing" id="growth">
+            <NavItem to="/marketing" icon={Megaphone} label="Hero Banners" />
+            <NavItem to="/promotions" icon={Zap} label="Broadcast Deals" />
+            <NavItem to="/coupons" icon={Ticket} label="Elite Tokens" />
+            <NavItem to="/customers" icon={Users} label="User Base" />
+            <NavItem to="/users-control" icon={ShieldAlert} label="User & Staff Control" />
+          </MenuGroup>
+
+          <MenuGroup label="Intelligence" id="analytics">
+            <NavItem to="/analytics" icon={BarChart3} label="Growth Analytics" />
+            <NavItem to="/reviews" icon={Star} label="Customer Reviews" />
+          </MenuGroup>
+
+          <MenuGroup label="System Control" id="system">
+            <NavItem to="/design" icon={Palette} label="Aesthetic Presets" />
+            <NavItem to="/support" icon={LifeBuoy} label="Support Nexus" />
+            <NavItem to="/settings" icon={Settings} label="Global Params" />
+            <NavItem to="/profile" icon={User} label="Master Profile" />
+          </MenuGroup>
+        </nav>
+
+        {/* Footer Action */}
+        <div className="p-8 bg-dark-deep/80 backdrop-blur-md border-t border-white/5">
+          <button 
+            onClick={() => {
+              navigate('/marketing');
+              if (window.innerWidth < 1024) onClose?.();
+            }}
+            className="w-full bg-brand-light text-dark-deep py-5 rounded-[2rem] font-black text-sm uppercase tracking-widest hover:bg-white hover:scale-105 transition-all shadow-2xl shadow-brand/20 flex items-center justify-center space-x-3 mb-6"
+          >
+            <Plus size={20} />
+            <span>New Campaign</span>
+          </button>
+          <button 
+            onClick={() => {
+              localStorage.clear();
+              navigate('/login');
+            }}
+            className="flex items-center justify-center space-x-3 w-full text-slate-600 hover:text-red-500 transition-colors text-[10px] font-black uppercase tracking-widest"
+          >
+            <LogOut size={14} />
+            <span>Terminate Link</span>
+          </button>
         </div>
-
-        <MenuGroup label="Store Logistics" id="store">
-          <NavItem to="/orders" icon={ShoppingBag} label="Order Management" badge="LIVE" />
-          <NavItem to="/riders" icon={Bike} label="Fleet Logistics" />
-          <NavItem to="/menu" icon={Edit3} label="Menu Editor" />
-          <NavItem to="/categories" icon={Layers} label="Taxonomy" />
-        </MenuGroup>
-
-        <MenuGroup label="Neural Marketing" id="growth">
-          <NavItem to="/marketing" icon={Megaphone} label="Hero Banners" />
-          <NavItem to="/promotions" icon={Zap} label="Broadcast Deals" />
-          <NavItem to="/coupons" icon={Ticket} label="Elite Tokens" />
-          <NavItem to="/customers" icon={Users} label="User Base" />
-          <NavItem to="/users-control" icon={ShieldAlert} label="User & Staff Control" />
-        </MenuGroup>
-
-        <MenuGroup label="Intelligence" id="analytics">
-          <NavItem to="/analytics" icon={BarChart3} label="Growth Analytics" />
-          <NavItem to="/reviews" icon={Star} label="Customer Reviews" />
-        </MenuGroup>
-
-        <MenuGroup label="System Control" id="system">
-          <NavItem to="/design" icon={Palette} label="Aesthetic Presets" />
-          <NavItem to="/support" icon={LifeBuoy} label="Support Nexus" />
-          <NavItem to="/settings" icon={Settings} label="Global Params" />
-          <NavItem to="/profile" icon={User} label="Master Profile" />
-        </MenuGroup>
-      </nav>
-
-      {/* Footer Action */}
-      <div className="p-8 bg-dark-deep/80 backdrop-blur-md border-t border-white/5">
-        <button 
-          onClick={() => navigate('/marketing')}
-          className="w-full bg-brand-light text-dark-deep py-5 rounded-[2rem] font-black text-sm uppercase tracking-widest hover:bg-white hover:scale-105 transition-all shadow-2xl shadow-brand/20 flex items-center justify-center space-x-3 mb-6"
-        >
-          <Plus size={20} />
-          <span>New Campaign</span>
-        </button>
-        <button 
-          onClick={() => {
-            localStorage.clear();
-            navigate('/login');
-          }}
-          className="flex items-center justify-center space-x-3 w-full text-slate-600 hover:text-red-500 transition-colors text-[10px] font-black uppercase tracking-widest"
-        >
-          <LogOut size={14} />
-          <span>Terminate Link</span>
-        </button>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 };
 
