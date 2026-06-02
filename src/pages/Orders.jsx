@@ -232,10 +232,10 @@ const Orders = () => {
   };
 
   return (
-    <div className="p-10 space-y-12 animate-in pb-32">
-      <div className="flex justify-between items-end">
+    <div className="p-4 md:p-10 space-y-12 animate-in pb-32">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 md:gap-0">
         <div>
-          <h1 className="text-5xl font-black text-white tracking-tighter mb-3">Live Operations</h1>
+          <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-3">Live Operations</h1>
           <p className="text-slate-500 font-bold tracking-tight ml-1">Real-time order tracking and kitchen management matrix.</p>
         </div>
         <div className="bg-dark-surface px-8 py-4 rounded-2xl border border-white/5 flex items-center space-x-3 shadow-2xl">

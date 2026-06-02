@@ -117,10 +117,10 @@ const Analytics = () => {
   );
 
   return (
-    <div className="p-10 space-y-12 animate-in fade-in duration-500 pb-32">
+    <div className="p-4 md:p-10 space-y-12 animate-in fade-in duration-500 pb-32">
       {/* Header */}
       <div>
-        <h1 className="text-5xl font-black text-white tracking-tighter mb-3">Growth Analytics</h1>
+        <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-3">Growth Analytics</h1>
         <p className="text-slate-500 font-bold tracking-tight">Deep dive into user acquisition and order volume metrics.</p>
       </div>
 

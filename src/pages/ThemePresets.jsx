@@ -77,7 +77,7 @@ const ThemePresets = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="flex justify-between items-end">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 md:gap-0">
         <div>
           <h1 className="text-3xl font-black text-white">Design Presets</h1>
           <p className="text-slate-400 font-medium">Create and switch between multiple app themes instantly.</p>

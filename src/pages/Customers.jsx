@@ -57,11 +57,11 @@ const Customers = () => {
   }
 
   return (
-    <div className="p-10 space-y-12 animate-in">
+    <div className="p-4 md:p-10 space-y-12 animate-in">
       {/* Page Header */}
-      <div className="flex justify-between items-end">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 md:gap-0">
         <div>
-          <h1 className="text-5xl font-black text-white tracking-tighter mb-3">User Base</h1>
+          <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-3">User Base</h1>
           <p className="text-slate-500 font-bold tracking-tight">Monitor and manage your elite customer segments.</p>
         </div>
         <div className="bg-dark-surface px-8 py-4 rounded-2xl border border-white/5 flex items-center space-x-3">
@@ -121,7 +121,8 @@ const Customers = () => {
 
       {/* Customers Table */}
       <div className="bg-dark-surface border border-white/5 rounded-[3rem] overflow-hidden shadow-2xl">
-        <table className="w-full text-left">
+        <div className="overflow-x-auto w-full -mx-4 md:mx-0 px-4 md:px-0">
+        <table className="w-full text-left min-w-[800px]">
           <thead>
             <tr className="border-b border-white/5 text-[10px] font-black text-slate-600 uppercase tracking-widest">
               <th className="px-10 py-8">Customer Segment</th>
@@ -208,6 +209,7 @@ const Customers = () => {
             )}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   );

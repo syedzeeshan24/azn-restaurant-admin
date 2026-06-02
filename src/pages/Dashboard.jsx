@@ -155,10 +155,10 @@ const Dashboard = () => {
   );
 
   return (
-    <div className="p-10 space-y-12 animate-in pb-32">
+    <div className="p-4 md:p-10 space-y-12 animate-in pb-32">
       {/* Welcome Header */}
       <div>
-        <h1 className="text-5xl font-black text-white tracking-tighter mb-3">Welcome back, Admin</h1>
+        <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-3">Welcome back, Admin</h1>
         <p className="text-slate-500 font-bold tracking-tight">Performance overview for your premium locations.</p>
       </div>
 

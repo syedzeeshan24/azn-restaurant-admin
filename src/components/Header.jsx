@@ -27,7 +27,7 @@ const Header = ({ onMenuClick }) => {
         <Menu size={20} />
       </button>
 
-      <div className="flex items-center flex-1 max-w-2xl">
+      <div className="hidden md:flex items-center flex-1 max-w-2xl mx-4">
         <div className="relative w-full group">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-brand-light transition-colors" size={20} />
           <input 
