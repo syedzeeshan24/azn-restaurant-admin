@@ -27,12 +27,12 @@ const Header = ({ onMenuClick }) => {
         <Menu size={20} />
       </button>
 
-      <div className="hidden md:flex items-center flex-1 max-w-2xl mx-4">
+      <div className="w-full md:w-auto order-last md:order-none mt-4 md:mt-0 flex items-center flex-1 max-w-2xl mx-0 md:mx-4">
         <div className="relative w-full group">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-brand-light transition-colors" size={20} />
           <input 
             type="text" 
-            placeholder="Search analytics, orders, or customers..." 
+            placeholder="Search analytics..." 
             className="w-full pl-14 pr-6 py-4 bg-dark-surface border border-white/5 rounded-2xl focus:ring-2 focus:ring-brand-light/20 focus:border-brand-light/30 transition-all outline-none text-sm text-white placeholder:text-slate-600 font-bold shadow-inner"
           />
         </div>

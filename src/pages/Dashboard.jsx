@@ -114,6 +114,28 @@ const Dashboard = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const handleDownloadCSV = () => {
+    if (!recentOrders || recentOrders.length === 0) return;
+    const headers = ['Order ID', 'Customer', 'Item', 'Total', 'Status'];
+    const rows = recentOrders.map(o => [
+      `AZN-${o._id.substring(o._id.length - 4)}`,
+      o.user?.name || 'Guest User',
+      o.items?.[0]?.product?.name || 'Multiple Items',
+      o.grandTotal,
+      o.status
+    ]);
+    const csvContent = "data:text/csv;charset=utf-8," 
+        + headers.join(",") + "\n" 
+        + rows.map(e => e.join(",")).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "recent_orders.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const StatCard = ({ title, value, icon: Icon, trend, trendValue, badge }) => (
     <div className="bg-dark-surface border border-white/5 p-8 rounded-[2rem] hover:border-brand-light/20 transition-all group">
       <div className="flex justify-between items-start mb-6">
@@ -189,12 +211,12 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Revenue Trends Chart Section */}
-        <div className="lg:col-span-2 bg-dark-surface border border-white/5 rounded-[3rem] p-12">
-          <div className="flex justify-between items-center mb-12">
+        <div className="lg:col-span-2 bg-dark-surface border border-white/5 rounded-[3rem] p-6 md:p-12">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 md:gap-0">
             <h3 className="text-2xl font-black text-white">Revenue Trends</h3>
-            <div className="flex bg-dark-deep p-1 rounded-2xl border border-white/5">
-               <button className="px-6 py-2 bg-brand-light text-dark-deep rounded-xl text-xs font-black uppercase tracking-widest transition-all">Weekly</button>
-               <button className="px-6 py-2 text-slate-500 hover:text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all">Monthly</button>
+            <div className="flex w-full md:w-auto bg-dark-deep p-1 rounded-2xl border border-white/5">
+               <button className="flex-1 md:flex-none px-6 py-3 md:py-2 bg-brand-light text-dark-deep rounded-xl text-xs font-black uppercase tracking-widest transition-all">Weekly</button>
+               <button className="flex-1 md:flex-none px-6 py-3 md:py-2 text-slate-500 hover:text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all">Monthly</button>
             </div>
           </div>
           <div className="h-80 w-full mt-4">
@@ -220,7 +242,7 @@ const Dashboard = () => {
         </div>
 
         {/* Top Selling Items Section */}
-        <div className="bg-dark-surface border border-white/5 rounded-[3rem] p-12 flex flex-col">
+        <div className="bg-dark-surface border border-white/5 rounded-[3rem] p-6 md:p-12 flex flex-col">
           <h3 className="text-2xl font-black text-white mb-10">Top Selling Items</h3>
           <div className="space-y-8 flex-1">
              {topItems.map((item, i) => (
@@ -245,10 +267,10 @@ const Dashboard = () => {
       </div>
 
       {/* Recent Orders Section */}
-      <div className="bg-dark-surface border border-white/5 rounded-[3rem] p-12">
-        <div className="flex justify-between items-center mb-12">
+      <div className="bg-dark-surface border border-white/5 rounded-[3rem] p-6 md:p-12">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4 md:gap-0">
           <h3 className="text-2xl font-black text-white">Recent Orders</h3>
-          <button className="flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-brand-light transition-all">
+          <button onClick={handleDownloadCSV} className="flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-brand-light transition-all">
             <Download size={16} />
             <span>Download CSV</span>
           </button>
@@ -298,17 +320,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Floating Pending Notification */}
-      <div className="fixed bottom-12 right-12 flex items-center bg-dark-deep border border-white/10 rounded-[2rem] p-3 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-[100] animate-in group">
-         <div className="flex items-center space-x-4 px-6 py-2 border-r border-white/10">
-            <div className="w-2.5 h-2.5 bg-brand-light rounded-full animate-pulse shadow-[0_0_10px_rgba(179,136,255,0.8)]"></div>
-            <span className="text-sm font-black text-white tracking-tight">{stats.activeOrders} Orders Pending</span>
-         </div>
-         <button className="flex items-center space-x-3 px-8 py-4 bg-brand-light text-dark-deep rounded-[1.5rem] font-black text-xs uppercase tracking-widest hover:bg-white hover:scale-105 transition-all ml-3">
-            <span>Process Now</span>
-            <ChevronRight size={16} />
-         </button>
-      </div>
     </div>
   );
 };
