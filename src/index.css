@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #8E248C;
+  --color-brand-light: #B388FF;
+  --color-accent: #FF7EB3;
+  --color-dark-deep: #0D0D0F;
+  --color-dark-surface: #15151F;
+  --color-dark-card: #1A1A24;
+  --color-neon-purple: #8B5CF6;
+}
+
+@layer base {
+  body {
+    @apply bg-dark-deep text-white antialiased overflow-x-hidden;
+    font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-dark-surface/40 backdrop-blur-xl border border-white/5;
+  }
+  
+  .glass-card {
+    @apply bg-dark-card/60 backdrop-blur-xl border border-white/5 shadow-2xl;
+  }
+
+  .card-premium {
+    @apply bg-dark-card rounded-[2rem] border border-white/5 shadow-xl transition-all duration-500 hover:border-brand-light/30;
+  }
+  
+  .neon-glow {
+    @apply shadow-[0_0_30px_rgba(142,36,140,0.15)];
+  }
+  
+  .cyber-gradient {
+    @apply bg-gradient-to-br from-brand to-brand-light;
+  }
+
+  .btn-premium {
+    @apply bg-brand-light text-dark-deep px-6 py-3 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-white hover:scale-105 transition-all shadow-lg;
+  }
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full hover:bg-brand-light;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fade-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
