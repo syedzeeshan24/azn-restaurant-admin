@@ -207,12 +207,22 @@ const UserControl = () => {
               <tr key={u._id} className="hover:bg-white/[0.02] transition-colors group">
                 <td className="px-10 py-8">
                   <div className="flex items-center space-x-5">
-                    <div className="w-14 h-14 rounded-[1.2rem] overflow-hidden border border-brand-light/20 flex items-center justify-center shadow-xl shadow-brand/10">
-                      <img 
-                        src={u.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop'} 
-                        className="w-full h-full object-cover" 
-                        alt={u.name} 
-                      />
+                    <div className="w-14 h-14 rounded-[1.2rem] overflow-hidden border border-brand-light/20 flex items-center justify-center shadow-xl shadow-brand/10 bg-dark-deep">
+                      {u.avatar && !u.avatar.startsWith('file://') ? (
+                        <img 
+                          src={u.avatar} 
+                          className="w-full h-full object-cover" 
+                          alt={u.name}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.parentNode.innerHTML = `<span style="color:#D1C4E9;font-weight:900;font-size:20px">${u.name?.charAt(0)?.toUpperCase() || '?'}</span>`;
+                          }}
+                        />
+                      ) : (
+                        <span className="text-brand-light font-black text-xl">
+                          {u.name?.charAt(0)?.toUpperCase() || '?'}
+                        </span>
+                      )}
                     </div>
                     <div>
                       <span className="text-lg font-black text-white group-hover:text-brand-light transition-colors">{u.name}</span>
