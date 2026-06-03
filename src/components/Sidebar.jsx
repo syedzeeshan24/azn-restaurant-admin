@@ -150,7 +150,6 @@ const Sidebar = ({ isOpen, onClose }) => {
           </MenuGroup>
 
           <MenuGroup label="System Control" id="system">
-            <NavItem to="/design" icon={Palette} label="Aesthetic Presets" />
             <NavItem to="/support" icon={LifeBuoy} label="Support Nexus" />
             <NavItem to="/settings" icon={Settings} label="Global Params" />
             <NavItem to="/profile" icon={User} label="Master Profile" />
