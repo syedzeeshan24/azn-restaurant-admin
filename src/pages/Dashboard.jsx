@@ -27,6 +27,7 @@ const Dashboard = () => {
   const [topItems, setTopItems] = useState([]);
   const [currencySymbol, setCurrencySymbol] = useState('Rs.');
   const [loading, setLoading] = useState(true);
+  const [timeframe, setTimeframe] = useState('weekly');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,27 +53,51 @@ const Dashboard = () => {
           customers: usersRes.data?.length || 0
         });
 
-        const last7Days = Array.from({length: 7}, (_, i) => {
-          const d = new Date();
-          d.setDate(d.getDate() - (6 - i));
-          return d.toISOString().split('T')[0];
-        });
-        
-        const revByDay = last7Days.reduce((acc, date) => ({...acc, [date]: 0}), {});
-        
-        orders.forEach(o => {
-           if (o.status !== 'Cancelled') {
-             const date = new Date(o.createdAt || new Date()).toISOString().split('T')[0];
-             if (revByDay[date] !== undefined) {
-                revByDay[date] += o.grandTotal || 0;
+        let cData = [];
+        if (timeframe === 'weekly') {
+          const last7Days = Array.from({length: 7}, (_, i) => {
+            const d = new Date();
+            d.setDate(d.getDate() - (6 - i));
+            return d.toISOString().split('T')[0];
+          });
+          const revByDay = last7Days.reduce((acc, date) => ({...acc, [date]: 0}), {});
+          orders.forEach(o => {
+             if (o.status !== 'Cancelled') {
+               const date = new Date(o.createdAt || new Date()).toISOString().split('T')[0];
+               if (revByDay[date] !== undefined) {
+                  revByDay[date] += o.grandTotal || 0;
+               }
              }
-           }
-        });
-        
-        const cData = last7Days.map(date => ({
-          name: new Date(date).toLocaleDateString('en-US', {weekday: 'short'}),
-          revenue: revByDay[date]
-        }));
+          });
+          cData = last7Days.map(date => ({
+            name: new Date(date).toLocaleDateString('en-US', {weekday: 'short'}),
+            revenue: revByDay[date]
+          }));
+        } else {
+          const last6Months = Array.from({length: 6}, (_, i) => {
+            const d = new Date();
+            d.setMonth(d.getMonth() - (5 - i));
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+          });
+          const revByMonth = last6Months.reduce((acc, m) => ({...acc, [m]: 0}), {});
+          orders.forEach(o => {
+             if (o.status !== 'Cancelled') {
+               const date = new Date(o.createdAt || new Date());
+               const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+               if (revByMonth[month] !== undefined) {
+                  revByMonth[month] += o.grandTotal || 0;
+               }
+             }
+          });
+          cData = last6Months.map(month => {
+            const [y, m] = month.split('-');
+            const date = new Date(y, parseInt(m)-1, 1);
+            return {
+              name: date.toLocaleDateString('en-US', {month: 'short'}),
+              revenue: revByMonth[month]
+            };
+          });
+        }
         setChartData(cData);
 
         const itemCounts = {};
@@ -112,7 +137,7 @@ const Dashboard = () => {
     fetchData();
     const interval = setInterval(fetchData, 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [timeframe]);
 
   const handleDownloadCSV = () => {
     if (!recentOrders || recentOrders.length === 0) return;
@@ -215,8 +240,8 @@ const Dashboard = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 md:gap-0">
             <h3 className="text-2xl font-black text-white">Revenue Trends</h3>
             <div className="flex w-full md:w-auto bg-dark-deep p-1 rounded-2xl border border-white/5">
-               <button className="flex-1 md:flex-none px-6 py-3 md:py-2 bg-brand-light text-dark-deep rounded-xl text-xs font-black uppercase tracking-widest transition-all">Weekly</button>
-               <button className="flex-1 md:flex-none px-6 py-3 md:py-2 text-slate-500 hover:text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all">Monthly</button>
+               <button onClick={() => setTimeframe('weekly')} className={`flex-1 md:flex-none px-6 py-3 md:py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${timeframe === 'weekly' ? 'bg-brand-light text-dark-deep' : 'text-slate-500 hover:text-white'}`}>Weekly</button>
+               <button onClick={() => setTimeframe('monthly')} className={`flex-1 md:flex-none px-6 py-3 md:py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${timeframe === 'monthly' ? 'bg-brand-light text-dark-deep' : 'text-slate-500 hover:text-white'}`}>Monthly</button>
             </div>
           </div>
           <div className="h-80 w-full mt-4">
